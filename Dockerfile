@@ -27,8 +27,6 @@ COPY --from=builder /app/build ./build
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/src ./src
-COPY start.sh ./start.sh
-RUN chmod +x start.sh
 
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -37,4 +35,4 @@ EXPOSE 3000
 
 VOLUME ["/app/data"]
 
-CMD ["./start.sh"]
+CMD ["sh", "-c", "npx drizzle-kit migrate && (test -f /app/data/.seeded || (npx tsx src/lib/server/db/seed.ts && npx tsx src/lib/server/db/seed-paths.ts && npx tsx src/lib/server/db/seed-feeds.ts && touch /app/data/.seeded)) && node build"]
