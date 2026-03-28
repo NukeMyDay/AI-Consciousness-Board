@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -36,9 +36,9 @@ Respond in JSON: {"feedback": "2-3 sentences evaluating their answer", "followUp
 	try {
 		let result: any;
 
-		if (ANTHROPIC_API_KEY) {
+		if (env.ANTHROPIC_API_KEY) {
 			const Anthropic = (await import('@anthropic-ai/sdk')).default;
-			const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
+			const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
 			const response = await client.messages.create({
 				model: 'claude-sonnet-4-20250514',
 				max_tokens: 500,
@@ -47,9 +47,9 @@ Respond in JSON: {"feedback": "2-3 sentences evaluating their answer", "followUp
 			const text = response.content[0].type === 'text' ? response.content[0].text : '';
 			const jsonMatch = text.match(/\{[\s\S]*\}/);
 			result = jsonMatch ? JSON.parse(jsonMatch[0]) : { feedback: text, followUp: '' };
-		} else if (GOOGLE_AI_API_KEY) {
+		} else if (env.GOOGLE_AI_API_KEY) {
 			const { GoogleGenAI } = await import('@google/genai');
-			const ai = new GoogleGenAI({ apiKey: GOOGLE_AI_API_KEY });
+			const ai = new GoogleGenAI({ apiKey: env.GOOGLE_AI_API_KEY });
 			const response = await ai.models.generateContent({
 				model: 'gemini-2.5-flash',
 				contents: [{ role: 'user', parts: [{ text: prompt }] }],

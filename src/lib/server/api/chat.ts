@@ -3,7 +3,7 @@ import { conversation, conversationMessage, resource, tag, resourceTag, highligh
 import { eq, asc } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import type { Conversation, ChatMessage, ChatProvider } from '$lib/types';
-import { ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 // --- Conversation CRUD ---
 
@@ -119,10 +119,10 @@ export async function sendMessage(conversationId: string, userMessage: string): 
 // --- Provider implementations ---
 
 async function callClaude(systemPrompt: string, messages: { role: string; content: string }[], model: string): Promise<string> {
-	if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not configured');
+	if (!env.ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not configured');
 
 	const Anthropic = (await import('@anthropic-ai/sdk')).default;
-	const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
+	const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
 
 	const response = await client.messages.create({
 		model,
@@ -136,10 +136,10 @@ async function callClaude(systemPrompt: string, messages: { role: string; conten
 }
 
 async function callGemini(systemPrompt: string, messages: { role: string; content: string }[], model: string): Promise<string> {
-	if (!GOOGLE_AI_API_KEY) throw new Error('GOOGLE_AI_API_KEY not configured');
+	if (!env.GOOGLE_AI_API_KEY) throw new Error('GOOGLE_AI_API_KEY not configured');
 
 	const { GoogleGenAI } = await import('@google/genai');
-	const ai = new GoogleGenAI({ apiKey: GOOGLE_AI_API_KEY });
+	const ai = new GoogleGenAI({ apiKey: env.GOOGLE_AI_API_KEY });
 
 	// Build Gemini conversation history
 	const contents = messages.map((m) => ({
