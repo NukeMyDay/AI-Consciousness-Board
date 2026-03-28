@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--color-surface-50: #fafafa;
+	--color-surface-100: #f4f4f5;
+	--color-surface-200: #e4e4e7;
+	--color-surface-300: #d4d4d8;
+	--color-surface-400: #a1a1aa;
+	--color-surface-500: #71717a;
+	--color-surface-600: #52525b;
+	--color-surface-700: #3f3f46;
+	--color-surface-800: #27272a;
+	--color-surface-850: #1e1e22;
+	--color-surface-900: #18181b;
+	--color-surface-950: #09090b;
+
+	--color-accent: #8B5CF6;
+}
+
+body {
+	font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+button, a, select, [role="button"] {
+	cursor: pointer;
+}
+
+select {
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 0.75rem center;
+	padding-right: 2rem;
+}
+
+.dark body,
+.dark select,
+.dark input {
+	color-scheme: dark;
+}
